@@ -13,12 +13,16 @@
 #define MAX_ITERATIONS 100
 #define EPSILON 1e-6
 
-void matrix_vector_multiply(int matrix[MATRIX_SIZE][MATRIX_SIZE], int vector[MATRIX_SIZE], int result[MATRIX_SIZE])
+float absolute(float a){
+  return (a>=0)?a:-1*a;
+}
+
+void matrix_vector_multiply(int matrix[MATRIX_SIZE][MATRIX_SIZE], float vector[MATRIX_SIZE], float result[MATRIX_SIZE])
 {
   // Implementation of matrix_vector_multiply function...
   for (int i = 0; i < MATRIX_SIZE; i++)
   {
-    int temp = 0;
+    float temp = 0;
     for (int j = 0; j < MATRIX_SIZE; j++)
     {
       temp += matrix[i][j] * vector[j];
@@ -27,32 +31,45 @@ void matrix_vector_multiply(int matrix[MATRIX_SIZE][MATRIX_SIZE], int vector[MAT
   }
 }
 
-void normalize_vector(int vector[MATRIX_SIZE])
+void normalize_vector(float vector[MATRIX_SIZE])
 {
   // Implementation of normalize_vector function...
+  float magnitude = 0;
+  for (int i=0;i<MATRIX_SIZE;i++){
+    magnitude += vector[i]*vector[i];
+  }
+  magnitude = sqrt(magnitude);
+  for (int i=0;i<MATRIX_SIZE;i++){
+    vector[i] = vector[i]/magnitude;
+  }
   
 }
 
-bool is_eigenvector(int matrix[MATRIX_SIZE][MATRIX_SIZE], int vector[MATRIX_SIZE])
+bool is_eigenvector(int matrix[MATRIX_SIZE][MATRIX_SIZE], float vector[MATRIX_SIZE])
 {
   // Implementation of is_eigenvector function...
-  
+  float result[MATRIX_SIZE];
+  matrix_vector_multiply(matrix,vector,result);
+  normalize_vector(vector);
+  normalize_vector(result);
+  for (int i=0;i<MATRIX_SIZE;i++){
+    if ((result[i]>0 && vector[i]>0) || (result[i]<0 && vector[i]<0)){
+      if (absolute(result[i]-vector[i])>EPSILON){
+        return false;
+      }
+    }else{
+      if (absolute(result[i] + vector[i])>EPSILON){
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 int main()
 {
   int matrix[MATRIX_SIZE][MATRIX_SIZE];
-  int vector[MATRIX_SIZE];
-
-  // int Matrix[MATRIX_SIZE][MATRIX_SIZE] = {{1, 2}, {3, 4}};
-  // int vector[MATRIX_SIZE] = {2,1};
-
-  // int result[MATRIX_SIZE];
-  // matrix_vector_multiply(Matrix,vector,result);
-  // for (int i=0;i<MATRIX_SIZE;i++){
-  //   printf("%d ",result[i]);
-  // }
-
+  float vector[MATRIX_SIZE];
 
   if (is_eigenvector(matrix, vector))
     printf("The vector is an eigenvector for the matrix.\n");
