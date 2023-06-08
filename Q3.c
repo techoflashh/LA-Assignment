@@ -13,8 +13,9 @@
 #define MAX_ITERATIONS 100
 #define EPSILON 1e-6
 
-float absolute(float a){
-  return (a>=0)?a:-1*a;
+float absolute(float a)
+{
+  return (a >= 0) ? a : -1 * a;
 }
 
 void matrix_vector_multiply(int matrix[MATRIX_SIZE][MATRIX_SIZE], float vector[MATRIX_SIZE], float result[MATRIX_SIZE])
@@ -35,30 +36,47 @@ void normalize_vector(float vector[MATRIX_SIZE])
 {
   // Implementation of normalize_vector function...
   float magnitude = 0;
-  for (int i=0;i<MATRIX_SIZE;i++){
-    magnitude += vector[i]*vector[i];
+  for (int i = 0; i < MATRIX_SIZE; i++)
+  {
+    magnitude += vector[i] * vector[i];
   }
   magnitude = sqrt(magnitude);
-  for (int i=0;i<MATRIX_SIZE;i++){
-    vector[i] = vector[i]/magnitude;
+  for (int i = 0; i < MATRIX_SIZE; i++)
+  {
+    vector[i] = vector[i] / magnitude;
   }
-  
 }
 
 bool is_eigenvector(int matrix[MATRIX_SIZE][MATRIX_SIZE], float vector[MATRIX_SIZE])
 {
   // Implementation of is_eigenvector function...
+  bool isZeroVector = true;
+  for (int i=0;i<MATRIX_SIZE;i++){
+    if (vector[i]!=0){
+      isZeroVector = false;
+      break;
+    }
+  }
+  if (isZeroVector){
+    return 1;
+  }
   float result[MATRIX_SIZE];
-  matrix_vector_multiply(matrix,vector,result);
+  matrix_vector_multiply(matrix, vector, result);
   normalize_vector(vector);
   normalize_vector(result);
-  for (int i=0;i<MATRIX_SIZE;i++){
-    if ((result[i]>0 && vector[i]>0) || (result[i]<0 && vector[i]<0)){
-      if (absolute(result[i]-vector[i])>EPSILON){
+  for (int i = 0; i < MATRIX_SIZE; i++)
+  {
+    if ((result[i] > 0 && vector[i] > 0) || (result[i] < 0 && vector[i] < 0))
+    {
+      if (absolute(result[i] - vector[i]) > EPSILON)
+      {
         return false;
       }
-    }else{
-      if (absolute(result[i] + vector[i])>EPSILON){
+    }
+    else
+    {
+      if (absolute(result[i] + vector[i]) > EPSILON)
+      {
         return false;
       }
     }
