@@ -58,7 +58,7 @@ bool is_eigenvector(int matrix[MATRIX_SIZE][MATRIX_SIZE], float vector[MATRIX_SI
     }
   }
   if (isZeroVector){
-    return 1;
+    return true;
   }
   float result[MATRIX_SIZE];
   matrix_vector_multiply(matrix, vector, result);
